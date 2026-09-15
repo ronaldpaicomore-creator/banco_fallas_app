@@ -21,6 +21,7 @@ así que da igual si hay 2 o 5 niveles.
 """
 
 import io
+import json
 import os
 from typing import List
 
@@ -52,20 +53,11 @@ FOLDER_MIME = "application/vnd.google-apps.folder"
 
 def get_drive_service():
     """Autentica con la API de Google Drive desde Secrets (nube) o credentials.json (local)."""
-    if "gcp_service_account" in st.secrets:
-        creds_dict = dict(st.secrets["gcp_service_account"])
-        
-        # Limpia y arregla la clave privada sea cual sea el formato pegado
-        if "private_key" in creds_dict:
-            pk = creds_dict["private_key"]
-            # Si se pegó con \n literales, los convierte a saltos de línea reales
-            if "\\n" in pk:
-                pk = pk.replace("\\n", "\n")
-            # Elimina comillas extra o espacios accidentales al inicio/final
-            creds_dict["private_key"] = pk.strip().strip('"').strip("'")
-            
+    if "GCP_JSON" in st.secrets:
+        # Lee el JSON de 1 línea directamente sin errores de formato PEM
+        info = json.loads(st.secrets["GCP_JSON"])
         creds = service_account.Credentials.from_service_account_info(
-            creds_dict,
+            info,
             scopes=SCOPES
         )
     else:
