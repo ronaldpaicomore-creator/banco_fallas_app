@@ -99,8 +99,8 @@ def load_vectorstore(force_reindex: bool = False):
         with open(PROGRESO_FILE) as f:
             inicio = int(f.read().strip() or 0)
 
-    BATCH_SIZE = 15
-    PAUSE_SECONDS = 20
+    BATCH_SIZE = 10
+    PAUSE_SECONDS = 25
 
     vectordb = Chroma(persist_directory=PERSIST_DIR, embedding_function=embeddings)
 
