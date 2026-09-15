@@ -1,0 +1,14 @@
+streamlit
+python-dotenv
+google-api-python-client
+google-auth
+langchain
+langchain-core
+langchain-text-splitters
+langchain-google-genai
+langchain-community
+chromadb
+pypdf
+python-docx
+python-pptx
+google-auth-oauthlib
