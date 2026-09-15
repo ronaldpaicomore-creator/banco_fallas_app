@@ -24,6 +24,7 @@ import io
 import os
 from typing import List
 
+import streamlit as st
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
@@ -50,9 +51,17 @@ FOLDER_MIME = "application/vnd.google-apps.folder"
 
 
 def get_drive_service():
-    creds = service_account.Credentials.from_service_account_file(
-        CREDENTIALS_FILE, scopes=SCOPES
-    )
+    """Autentica con la API de Google Drive desde Secrets (nube) o credentials.json (local)."""
+    if "gcp_service_account" in st.secrets:
+        creds = service_account.Credentials.from_service_account_info(
+            dict(st.secrets["gcp_service_account"]),
+            scopes=SCOPES
+        )
+    else:
+        creds = service_account.Credentials.from_service_account_file(
+            CREDENTIALS_FILE,
+            scopes=SCOPES
+        )
     return build("drive", "v3", credentials=creds)
 
 
