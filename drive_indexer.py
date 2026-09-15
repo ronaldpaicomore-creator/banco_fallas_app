@@ -53,8 +53,14 @@ FOLDER_MIME = "application/vnd.google-apps.folder"
 def get_drive_service():
     """Autentica con la API de Google Drive desde Secrets (nube) o credentials.json (local)."""
     if "gcp_service_account" in st.secrets:
+        # Copiamos el diccionario de secrets
+        creds_dict = dict(st.secrets["gcp_service_account"])
+        # Reemplazamos los '\n' literales por saltos de línea reales para el formato PEM
+        if "private_key" in creds_dict:
+            creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
+            
         creds = service_account.Credentials.from_service_account_info(
-            dict(st.secrets["gcp_service_account"]),
+            creds_dict,
             scopes=SCOPES
         )
     else:
